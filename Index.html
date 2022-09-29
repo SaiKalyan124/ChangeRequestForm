@@ -1,0 +1,192 @@
+{% extends 'base.html' %}
+{% include 'header.html' %}
+
+
+
+{% block title %} Home {% endblock %}
+
+{% block body %}
+
+<div class="container">
+    <div class="row">
+        <div class="col md-12">
+            <div class="jumbotron p-3">
+                <h1>
+
+                    <button type="button" class="btn btn-success float-right"
+                    data-toggle="modal" data-target="#mymodal">Raise New request</button>
+                    <button type="button" class="btn btn-info float-right"
+                    data-toggle="modal" data-target="#mymodal">View Edited Records</button>
+                    <button type="button" class="btn btn-info float-right"
+                    data-toggle="modal" data-target="#mymodal">View Deleted Records</button>
+                </h1>
+
+                {% with messages = get_flashed_messages() %}
+                {% if messages %}
+                {% for message in messages %}
+
+                <div class="alert alert-success alert-dismissable" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="close">
+                        <span aria-hidden="true">x</span>
+                    </button>
+                    {{message}}
+                </div>
+
+
+                {% endfor %}
+                {% endif %}
+                {% endwith %}
+
+                <table class ="table table-hover table-dark">
+                    <tr>
+                        <th>Project ID & Name</th>
+                        <th>Requestor's Name</th>
+                        <th>Type of Request</th>
+                        <th>Target Date</th>
+                        <th>Description</th>
+                        <th>Reason</th>
+                        <th>Action</th>
+                    </tr>
+
+                    {% for row in requestForms %}
+                    <tr>
+                        
+                        <td>{{row.projectId}}</td>
+                        <td>{{row.requestorName}}</td>
+                        <td>{{row.typeOfRequest}}</td>
+                        <td>{{row.targetDate}}</td>
+                        <td>{{row.description}}</td>
+                        <td>{{row.reason}}</td>
+                        <td>
+                            <a href="/update/{{row.projectId}}" class="btn btn-warning btn-xs" data-toggle="modal" data-target="#modaledit{{row.projectId}}">Edit</a>
+                            <a href="/delete/{{row.projectId}}" class="btn btn-danger btn-xs" onclick="return confirm('Are you sure to delete?')">Delete</a></td>
+                    </tr>
+
+                <!--Model Edit Employee-->
+                <div id="modaledit{{row.projectId}}" class="modal fade" role="dialog">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h4 class="modal-title">Update Information</h4>
+                
+                            </div>
+                            <div class="modal-body">
+                                <form action="/update" method="POST">
+                                    <div class="form-group">
+                                        <label>Project ID : {{row.projectId}}</label>
+                                        <input type="hidden"  name="projectId" value="{{row.projectId}}">
+                
+                                    </div>
+                                    <div class="form-group">
+                                        <label>requestor's name</label>
+                                        <input type="text" class="form-control" name="requestorName" value="{{row.requestorName}}">
+                
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Type of request</label>
+                                        <input type="text" class="form-control" name="typeOfRequest" value="{{row.typeOfRequest}}">
+                
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Target Date</label>
+                                        <input type="date" class="form-control" name="targetDate" value="{{row.targetDate}}">
+                
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Description</label>
+                                        <input type="text" class="form-control" name="description" value="{{row.description}}">
+                
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Reason</label>
+                                        <input type="text" class="form-control" name="reason" value="{{row.reason}}">
+                
+                                    </div>
+                                    <div class="form-group">
+                                        <button class="btn btn-primary" type="submit">Update</button>
+                                        
+                                        
+                                    </div>
+                                    <div class="modal-footer">
+                                        <!-- <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Close</button> -->
+                                        <button type="button" class="btn btn-secondary" data-dismiss="modal" >Close</button>
+                                    </div>
+                                    
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                    {% endfor %}
+
+
+
+
+                </table>
+
+            </div>
+
+            <!-- Model Add Employee-->
+
+            <div id="mymodal" class="modal fade" role="dialog">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h4 class="modal-title">Change Request</h4>
+            
+                        </div>
+                        <div class="modal-body">
+                            <form action="/insert" method="POST">
+                                <div class="form-group">
+                                    <label>Project ID</label>
+                                    <input type="text" class="form-control" name="projectId" required="0">
+            
+                                </div>
+                                <div class="form-group">
+                                    <label>requestor's name</label>
+                                    <input type="text" class="form-control" name="requestorName" required="0">
+            
+                                </div>
+                                <div class="form-group">
+                                    <label>Type of request</label>
+                                    <input type="text" class="form-control" name="typeOfRequest" required="0">
+            
+                                </div>
+                                <div class="form-group">
+                                    <label>Target Date</label>
+                                    <input type="date" class="form-control" name="targetDate" required="0">
+            
+                                </div>
+                                <div class="form-group">
+                                    <label>Description</label>
+                                    <input type="text" class="form-control" name="description" required="0">
+            
+                                </div>
+                                <div class="form-group">
+                                    <label>Reason</label>
+                                    <input type="text" class="form-control" name="reason" required="0">
+            
+                                </div>
+                                <div class="form-group">
+                                    <button class="btn btn-primary" type="submit">New Request</button>
+                                    
+                                    
+                                </div>
+                                <div class="modal-footer">
+                                    <!-- <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Close</button> -->
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal" >Close
+                                      </button>
+                                </div>
+                                
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>           
+        </div>
+        
+    </div>
+</div>
+
+
+{% endblock %}
